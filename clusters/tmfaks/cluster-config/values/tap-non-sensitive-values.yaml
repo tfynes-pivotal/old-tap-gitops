@@ -1,4 +1,4 @@
-tap-install:
+tap_install:
   profile: full
   ceip_policy_disclosed: true 
 
