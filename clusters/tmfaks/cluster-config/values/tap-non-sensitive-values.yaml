@@ -96,7 +96,7 @@ tap_install:
       injected_sidecar_support: true
 
     cert_manager:
-    issuers: []
+      issuers: []
 
 
 
