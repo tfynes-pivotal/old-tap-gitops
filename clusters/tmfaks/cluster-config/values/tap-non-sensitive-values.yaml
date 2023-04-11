@@ -1,101 +1,102 @@
 ---
 tap_install:
-  version:
-    package_repo_bundle_tag: "1.5.0-rc.20"
-    package_version: "1.5.0-rc.20"
-  profile: full
-  ceip_policy_disclosed: true 
+  values:
+    version:
+      package_repo_bundle_tag: "1.5.0-rc.20"
+      package_version: "1.5.0-rc.20"
+    profile: full
+    ceip_policy_disclosed: true 
 
-  excluded_packages:
-    - policy.apps.tanzu.vmware.com
+    excluded_packages:
+      - policy.apps.tanzu.vmware.com
 
-  shared:
-    ingress_domain: "akslab.tap.fynesy.com"
-    ingress_issuer: ""
+    shared:
+      ingress_domain: "akslab.tap.fynesy.com"
+      ingress_issuer: ""
 
-  supply_chain: basic
+    supply_chain: basic
 
-  ootb_supply_chain_basic:
-    registry:
-      server: "index.docker.io"
-      repository: "fynesy"
-    gitops:
-      ssh_secret: ""
+    ootb_supply_chain_basic:
+      registry:
+        server: "index.docker.io"
+        repository: "fynesy"
+      gitops:
+        ssh_secret: ""
 
-  learningcenter:
-    ingressDomain: "akslab.tap.fynesy.com"
+    learningcenter:
+      ingressDomain: "akslab.tap.fynesy.com"
 
-    imageRegistry:
-      host: index.docker.io/v1
+      imageRegistry:
+        host: index.docker.io/v1
 
-  policy:
-    tuf_enabled: false
+    policy:
+      tuf_enabled: false
 
-  tap_gui:
-    service_type: ClusterIP
-    ingressEnabled: "true"
-    ingressDomain: "akslab.tap.fynesy.com"
-    tls:
-      namespace: "tanzu-system-ingress"
-      secretName: "tapfynesycom"
+    tap_gui:
+      service_type: ClusterIP
+      ingressEnabled: "true"
+      ingressDomain: "akslab.tap.fynesy.com"
+      tls:
+        namespace: "tanzu-system-ingress"
+        secretName: "tapfynesycom"
 
-    app_config:
-      auth:
-        allowGuestAccess: true
-        environment: development
-        providers:
+      app_config:
+        auth:
+          allowGuestAccess: true
+          environment: development
+          providers:
+            github:
+              development:
+
+        integrations:
           github:
-            development:
+            - host: github.com
+        proxy:
+          /metadata-store:
+            target: https://metadata-store-app.metadata-store:8443/api/v1
+            changeOrigin: true
+            secure: false
+            headers:
+              X-Custom-Source: project-star
 
-      integrations:
-        github:
-          - host: github.com
-      proxy:
-        /metadata-store:
-          target: https://metadata-store-app.metadata-store:8443/api/v1
-          changeOrigin: true
-          secure: false
-          headers:
-            X-Custom-Source: project-star
+        app:
+            baseUrl: https://tap-gui.akslab.tap.fynesy.com
+        catalog:
+            locations:
+            - type: url
+              target: http://github.com/tfynes-pivotal/tapblankcatalog/blob/main/catalog-info.yaml 
+        backend:
+            baseUrl: https://tap-gui.akslab.tap.fynesy.com
+            cors:
+                origin: https://tap-gui.akslab.tap.fynesy.com
 
-      app:
-          baseUrl: https://tap-gui.akslab.tap.fynesy.com
-      catalog:
-          locations:
-          - type: url
-            target: http://github.com/tfynes-pivotal/tapblankcatalog/blob/main/catalog-info.yaml 
-      backend:
-          baseUrl: https://tap-gui.akslab.tap.fynesy.com
-          cors:
-              origin: https://tap-gui.akslab.tap.fynesy.com
+    metadata_store:
+      ns_for_export_app_cert: "*"
+      app_service_type: ClusterIP
 
-  metadata_store:
-    ns_for_export_app_cert: "*"
-    app_service_type: ClusterIP
-
-  scanning:
-    metadataStore:
-      url: ""
+    scanning:
+      metadataStore:
+        url: ""
 
 
-  grype:
-    targetImagePullSecret: "tap-registry"
+    grype:
+      targetImagePullSecret: "tap-registry"
 
-  cnrs:
-    domain_name: akslab.tap.fynesy.com
-    domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-    #! UNCOMMENT NEXT LINE TO ENABLE TLS INGRESS
-    #default_tls_secret: "tanzu-system-ingress/tapfynesycom"
+    cnrs:
+      domain_name: akslab.tap.fynesy.com
+      domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+      #! UNCOMMENT NEXT LINE TO ENABLE TLS INGRESS
+      #default_tls_secret: "tanzu-system-ingress/tapfynesycom"
 
-  contour:
-    envoy:
-      service:
-        type: LoadBalancer
-    #! for TSM
-    injected_sidecar_support: true
+    contour:
+      envoy:
+        service:
+          type: LoadBalancer
+      #! for TSM
+      injected_sidecar_support: true
 
-  cert_manager:
-  issuers: []
+    cert_manager:
+    issuers: []
 
 
 
